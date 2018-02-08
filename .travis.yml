@@ -1,10 +1,15 @@
 sudo: false
-
 language: ruby
-
 rvm:
-  - 2.3.3
-  - 2.4.0
-
+- 2.3.3
+- 2.4.0
 cache: bundler
 script: bundle exec middleman build
+deploy:
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  bucket: twain.hazybits.com
+  upload-dir: docs
+  region: eu-west-1
+  local-dir: build
