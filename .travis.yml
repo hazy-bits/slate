@@ -10,6 +10,6 @@ deploy:
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   bucket: twain.hazybits.com
   upload-dir: docs
-  region: eu-west-1
+  region: us-west-2
   local-dir: build
   skip_cleanup: true
