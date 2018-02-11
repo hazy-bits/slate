@@ -3,8 +3,6 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
-  - python
   - javascript
 
 toc_footers:
@@ -19,32 +17,70 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+> Web Site
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+```http
+https://twain.hazybits.com
+```
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+> API Endpoint
+
+```http
+https://twain-api.hazybits.com
+```
+
+Welcome to the TWAIN Cloud API! You can use our API to register, review, and control scanners, 
+associated with your TWAIN Cloud account. It is like Google Print, but for scanners :)
+
+You can do all kinds of amazing things with scanners remotely - acquire documents, process 
+them in the cloud and retrieve right to your device (PC, Mac, mobile phone - doesn't matter).
+API is based on HTTP / websockets, so can be accessed virtually from any platform.
+
+You can view code examples in the dark area to the right, and you can switch the programming language 
+of the examples with the tabs in the top right.
+
+Please feel free to follow development process on [GitHub](https://github.com/hazy-bits/twain-cloud) 
+and join the discussion! Documentation for the project is hosted on 
+[GitHub](https://github.com/hazy-bits/twain-cloud-docs) as well - so in case of any mistakes or 
+suggestions please submit an issue there.
+
+## TWAIN Direct vs TWAIN Cloud
+[TWAIN Direct](http://www.twaindirect.org/) is an industry standard created by 
+[TWAIN Working Grop](http://www.twain.org/). It defines a protocol of communication between 
+scanner device and client application. By design, TWAIN Direct does not require scanner drivers, 
+i.e. allows 'direct' connection between application and scanner device. Primary goal of the 
+standard is to make life of scanner vendors and application writers easier by introducing
+cross-platform, technology agnostic language of communication. 
+
+Please check out [TWAIN Direct](http://www.twaindirect.org/) web site for additional details.
+
+## TWAIN Cloud is a standard
+TWAIN Cloud is an extension of TWAIN Direct that defines a standard and secure way for scanner 
+devices to be used over Internet. This capability enables a number of interesting scenarios, not 
+available before:
+
+ - Accessing TWAIN Direct scanners across different networks
+ - Remote device management and document aquisition
+ - etc.
+
+TWAIN Cloud is an industry standard in its own right which [TWAIN Working Grop](http://www.twain.org/)
+owns. Having said that, TWAIN Cloud implementation that [HazyBits](https://hazybits.com) hosts on
+[https://twain.hazybits.com](https://twain.hazybits.com) web site is an implementation of the standard,
+one of the many possible.
+
+The primary goal of this implementation is to demonstrate what is possible to achieve with modern
+image capture tecnologies and how they can change your business processes.
+
 
 # Authentication
 
 > To authorize, use this code:
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
 ```shell
-# With shell, you can just pass the correct header with each request
+# With shell, you can just pass the correct 
+# header with each request
 curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+  -H "Authorization: <authorization token>"
 ```
 
 ```javascript
@@ -53,70 +89,62 @@ const kittn = require('kittn');
 let api = kittn.authorize('meowmeowmeow');
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+> Make sure to replace **authorization token** placeholder with correct token.
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+<b>TWAIN Cloud Standard</b> does not define authentication mechanism (different implementations
+may have conflicting authentication requirements). Instead, TWAIN Cloud explicitly defines which 
+methods <b>should</b> be authorized to ensure overall security of the solution. Implementations are 
+strongly advised to follow these recommendations.
 </aside>
 
-# Kittens
+HazyBits TWAIN Cloud implementation relies on OAuth2 authorization framework to exchange
+user's Facebook access token to a pair of TWAIN Cloud tokens:
 
-## Get All Kittens
+ - Access Token 
+ - Refresh Token
 
-```ruby
-require 'kittn'
+**Access token** should be passed with every request in `Authorization` HTTP header. Access token
+has an expiration time (1 hour by default) after which it should be refreshed using **refresh token**.
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+Diagram below illustrate the whole authentication process:
 
-```python
-import kittn
+## Login endpoint
+TBD
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+## Logout endpoint
+TBD
+
+## Refresh token endpoint
+TBD
+
+# Registration
+Registration process
+
+The whole registration process is illustrated on the diagram below:
+
+## Start registration
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+curl "https://twain-api.hazybits.com/register"
 ```
 
 ```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+$.ajax({
+    method: 'POST',
+    url: apiEndpoint + '/register'
+})
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{
+  "sample": "tbd"
+}
 ```
 
-This endpoint retrieves all kittens.
+This endpoint begins registration process.
 
 ### HTTP Request
 
@@ -125,29 +153,15 @@ This endpoint retrieves all kittens.
 ### Query Parameters
 
 Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+---------:|:-------:|:-----------
+`include_cats` | `false` | If set to true, the result will also include cats.
+`available` | `true` | If set to false, the result will include kittens that have already been adopted.
 
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
 </aside>
 
 ## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
 
 ```shell
 curl "http://example.com/api/kittens/2"
@@ -184,24 +198,10 @@ This endpoint retrieves a specific kitten.
 ### URL Parameters
 
 Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+---------:| -----------
+`ID` | The ID of the kitten to retrieve
 
 ## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
 
 ```shell
 curl "http://example.com/api/kittens/2"
