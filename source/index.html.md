@@ -8,7 +8,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
 toc_footers:
   - <a href='https://twain.hazybits.com'>HazyBits TWAIN Cloud</a>
   - <a href='https://github.com/hazy-bits/twain-cloud-docs'>Documentation on GitHub</a>
-  - © TWAIN Working Group and HazyBits, 2018
+  - © HazyBits, 2018
 
 includes:
   - authentication
