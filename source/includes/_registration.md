@@ -3,6 +3,8 @@ Registration process
 
 The whole registration process is illustrated on the diagram below:
 
+![Registration Flow](http://plantuml.com/plantuml/png/fL3D2e904BxlKmmUboJew26GJa5Kk4ddHGTRijbOLv-_yOT8qIuUTx_vVbMcYT11k8VWTe-FPpYKjiu3Y63hi32LHoV6ICYtggT58AMXndY4D3b92Pfo_kg9JdjZ2Rnz8aafH5eDFialVDK51X6GRaoXFMwWhWmL4rqXr49EZlcsPRaSKOWPlqxc4jV-iGE5ha77GfgVIDva78DJjDGrhcFv3fnjtZfntU7ykzR_kJXdnvfVUgdnf49MQlDQK_83)
+
 ## Start registration flow
 
 ```shell
