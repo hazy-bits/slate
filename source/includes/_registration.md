@@ -33,15 +33,7 @@ This endpoint begins registration process.
 `POST https://twain-api.hazybits.com/register`
 
 ### Request Payload
-
-Property | Default | Description
----------:|:-------:|:-----------
-`include_cats` | `false` | If set to true, the result will also include cats.
-`available` | `true` | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+TBD
 
 ## Complete registration flow
 
@@ -83,7 +75,4 @@ Cloud jobs.</aside>
 `GET https://twain-api.hazybits.com/claim`
 
 ### Request Payload
-
-Property | Description
----------:| -----------
-`ID` | The ID of the kitten to retrieve
+TBD
