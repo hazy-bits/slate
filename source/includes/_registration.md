@@ -1,9 +1,17 @@
-# Registration
-Registration process
+# Device Registration
 
-The whole registration process is illustrated on the diagram below:
+## Overview
 
-![Registration Flow](http://plantuml.com/plantuml/png/fL3D2e904BxlKmmUboJew26GJa5Kk4ddHGTRijbOLv-_yOT8qIuUTx_vVbMcYT11k8VWTe-FPpYKjiu3Y63hi32LHoV6ICYtggT58AMXndY4D3b92Pfo_kg9JdjZ2Rnz8aafH5eDFialVDK51X6GRaoXFMwWhWmL4rqXr49EZlcsPRaSKOWPlqxc4jV-iGE5ha77GfgVIDva78DJjDGrhcFv3fnjtZfntU7ykzR_kJXdnvfVUgdnf49MQlDQK_83)
+Scanner device should be registered with TWAIN Cloud and associated
+with a user account before it can be used. From scanner device standpoint
+the flow looks as follows:
+
+![Registration Flow](images/registration_flow.png)
+
+The whole process is more complex since it requires user interaction.
+Complete registration sequence is illustrated on the diagram below:
+
+![Registration Sequence](images/registration_sequence.png)
 
 ## Start registration flow
 
@@ -14,15 +22,21 @@ curl "https://twain-api.hazybits.com/register"
 ```javascript
 $.ajax({
     method: 'POST',
-    url: apiEndpoint + '/register'
-})
+    url: apiEndpoint + '/register',
+    contentType: 'application/json',
+    data: JSON.stringify({
+      // TBD
+    })
+});
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "sample": "tbd"
+  "registrationToken": "<registration token>",
+  "pollingUrl": "<polling URL>",
+  "inviteUrl": "<invite URL>"
 }
 ```
 
@@ -33,9 +47,83 @@ This endpoint begins registration process.
 `POST https://twain-api.hazybits.com/register`
 
 ### Request Payload
-TBD
 
-## Complete registration flow
+TBD (scanner attributes)
+
+### Response Payload
+
+Parameter | Description
+--------- | -----------
+`registrationToken` | Secret token that should be provided by user to claim the scanner.
+`pollingUrl` | URL to be used by scanner device to poll registration status.
+`inviteUrl` | URL to be used by user to claim the scanner.
+
+## Poll Registration Status
+
+```shell
+curl "https://twain-api.hazybits.com/poll?scannerId={scannerId}"
+```
+
+```javascript
+$.ajax({
+    method: 'GET',
+    url: apiEndpoint + '/poll?scannerId={scannerId}',
+});
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{ 
+  "success": true, 
+  "accessToken": "{accessToken}",
+  "refreshToken": "{refreshToken}"
+}
+```
+
+> In case of any error, response is as follows:
+
+```json
+{
+  "success": false,
+  "message": "Error message",
+}
+```
+
+Scanner device use this endpoint to poll TWAIN Cloud server and check
+if registration process is complete (user claimed the device successfully).
+
+It is recommended to poll the server with some delay before retries.
+5 seconds delay is reasonable default.
+
+### HTTP Request
+
+`GET https://twain-api.hazybits.com/poll?scannerId={scannerId}`
+
+### Query Parameters
+
+Parameter | Description
+--------- | -----------
+`scannerId` | Unique ID of the scanner to check registration status for.
+
+### Response Payload
+
+Success response payload:
+
+Parameter | Description
+--------- | -----------
+`success` | `True` in case of success registration.
+`accessToken` | Access token to be used by scanner to authorize calls to TWAIN Cloud endpoints.
+`refreshToken` | Refresh token to be used to get a new pair of access/refresh tokens.
+
+Error response payload:
+
+Parameter | Description
+--------- | -----------
+`success` | `False` in case incomplete registration.
+`message` | Technical message related to the request. 
+
+## Claim Device
 
 ```shell
 curl "https://twain-api.hazybits.com/claim"
@@ -46,19 +134,20 @@ curl "https://twain-api.hazybits.com/claim"
 // TODO: add headers and body
 $.ajax({
     method: 'POST',
-    url: apiEndpoint + '/claim'
-})
+    url: apiEndpoint + '/claim',
+    contentType: 'application/json',
+    data: JSON.stringify({ 
+      scannerId: '{scannerId}',
+      registrationToken: '{registrationToken}'
+    })
+});
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  // TBD
 }
 ```
 
@@ -72,7 +161,15 @@ Cloud jobs.</aside>
 
 ### HTTP Request
 
-`GET https://twain-api.hazybits.com/claim`
+`POST https://twain-api.hazybits.com/claim`
 
 ### Request Payload
-TBD
+
+Parameter | Description
+--------- | -----------
+`scannerId` | Unique ID of the scanner to be claimed.
+`registrationToken` | Registration token that was provided during scanner registration.
+
+### Response Payload
+
+TBD (scanner attributes)
